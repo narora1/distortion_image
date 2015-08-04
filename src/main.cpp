@@ -17,7 +17,7 @@ public:
         : nh_ ("~")
     {
         cloud_input.reset(new pcl::PointCloud<pcl::PointXYZ>);
-        cloud_sub = nh_.subscribe<sensor_msgs::PointCloud2> ("/head_camera/depth_downsample/points", 1, \
+        cloud_sub = nh_.subscribe<sensor_msgs::PointCloud2> ("/head_camera/depth/points", 1, \
                                                              &distortionRosNode::cloud_cb, this);
         din.cloud_size = 640*480;
         din.setSize();
@@ -56,10 +56,15 @@ int main(int argc, char** argv)
     //std::stringstream yaml_name;
     //yaml_name << "/tmp/distortion_.yaml";
     std::ofstream file;
-    file.open("distortion.yaml");
+    file.open("/etc/ros/indigo/distortion_check.yaml");
     //std::string cal = b.printCalibrationData();
-    file.write(reinterpret_cast<char*> (&drn.din.params[0]), drn.din.params.size()*sizeof(double));
-    file.close();
+   // file.write(reinterpret_cast<char*> (&drn.din.params[0]), drn.din.params.size()*sizeof(double));
+for (size_t i=0; i<drn.din.params.size(); i++)
+    {
+        file << drn.din.params[i] << std::endl;
+    }    
+
+file.close();
     //std::cout << cal;
 
     

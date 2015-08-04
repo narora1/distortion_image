@@ -16,10 +16,10 @@ void distortionImageNode::process()
     std::cout << cloud_in->width << std::endl;
     
     try{
-        listener.lookupTransform("/head_camera_depth_optical_frame", "/base_link",
-                                 ros::Time(0), transform);
-        listener.lookupTransform("/base_link","/head_camera_depth_optical_frame",
+        listener.lookupTransform("/head_camera_rgb_optical_frame", "/base_link",
                                  ros::Time(0), inv_transform);
+        listener.lookupTransform("/base_link","/head_camera_rgb_optical_frame",
+                                 ros::Time(0), transform);
 
    std::cout<<"hi"<<std::endl; 
    //std::cout<<"tranform"<< transform.pose<<std::endl;
@@ -54,7 +54,7 @@ void distortionImageNode::process()
         measured.push_back(cloud_in->points[i].y);
         measured.push_back(cloud_in->points[i].z);
         initials.push_back(1.0);
-        params[i] = 0.1;
+        params[i] = 1.2;
         cost_function = DistortionImageFunctor::Create(measured, 0);
         problem.AddResidualBlock(cost_function, NULL, &(params[i]));
     }
